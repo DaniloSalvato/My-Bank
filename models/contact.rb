@@ -6,7 +6,6 @@ class Contact < Sequel::Model
     def validate
         super
         validates_presence [:cellphone], allow_blank: true, message: 'cannot be blank'
-        validates_format /\A\d{11}\z/, :telephone, allow_blank: true, message: 'invalid number'
         validates_format /\A\d{11}\z/, :cellphone, allow_blank: true, message: 'invalid number'
     end
     
@@ -16,11 +15,11 @@ class Contact < Sequel::Model
         puts Rainbow("***Contatos***").bg(:cyan).bright
         contact_data = {}
         
-        puts Rainbow("Telefone (Ex:19912341234) : ").white.bright
-        contact_data[:telephone] = gets.chomp.to_i
-        
-        puts Rainbow("Celular (Ex:19912341234, não obrigatório*): ").white.bright
+        puts Rainbow("Celular (11 digitos, Ex:19912341234): ").white.bright
         contact_data[:cellphone] = gets.chomp.to_i
+
+        puts Rainbow("Telefone (Ex:19912341234, não obrigatório*) : ").white.bright
+        contact_data[:telephone] = gets.chomp.to_i
         
         contact_data
     end
@@ -37,21 +36,21 @@ class Contact < Sequel::Model
             contact_data[:user_id] = user.id
             Contact.create(contact_data)
         else
-            puts "Failed to save contact."
+            puts Rainbow("Failed to save contact.").bg(:red).bright.underline
             contact.errors.each do |column, error|
-                puts "#{column.capitalize}: #{error.join(', ')}"
+                puts Rainbow("#{column.capitalize}: #{error.join(', ')}").bg(:red).bright.underline
             end
         end
     end
 
     def self.update_contact(user)
         loop do     
-            puts "Contatos:"
+            puts Rainbow("***Contatos***").bg(:cyan).bright
             user.contacts.each_with_index do |contact, index|
-                puts "#{index + 1}. Telefone: #{contact.telephone}, Celular: #{contact.cellphone}"
+                puts Rainbow("#{index + 1}. Telefone: #{contact.telephone}, Celular: #{contact.cellphone}").bright
             end
         
-            print "Digite o número do contato que deseja alterar (ou 0 para sair): "
+            print Rainbow("Digite o número do contato que deseja alterar (ou 0 para sair): ").bright
             choice_contact = gets.chomp.to_i
         
             break if choice_contact == 0
@@ -62,9 +61,9 @@ class Contact < Sequel::Model
         
                 contact.update(contact_data)
         
-                puts 'Contato atualizado com sucesso!'
+                puts Rainbow('Contato atualizado com sucesso!').bg(:green).bright
             else
-                puts 'Invalid option. Try again.'
+                puts Rainbow('Invalid option. Try again.').bg(:green).bright
             end
         end
     end

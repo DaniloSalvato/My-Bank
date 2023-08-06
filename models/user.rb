@@ -17,6 +17,7 @@ class User < Sequel::Model
         
         validates_format /\A[^@\s]+@[^@\s]+\z/, :email, allow_blank: true, message: 'Invalid email format'
         validates_unique :email, allow_blank: true, message: 'Must be unique'
+        validates_unique :document, allow_blank: true, message: 'Must be unique'
         validates_format /\A(\d{11}|\d{14})\z/, :document, allow_blank: true, message: 'Must contain 11 or 14 numeric digits (CPF or CNPJ format)'
     end
 

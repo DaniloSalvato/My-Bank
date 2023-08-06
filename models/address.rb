@@ -30,7 +30,7 @@ class Address < Sequel::Model
         address_data[:state] = gets.chomp.capitalize
         
         print Rainbow("UF: ").white.bright
-        address_data[:uf] = gets.chomp.uppercase
+        address_data[:uf] = gets.chomp
         
         print Rainbow("CEP (Ex:12345-123): ").white.bright
         address_data[:zipcode] = gets.chomp
@@ -55,22 +55,22 @@ class Address < Sequel::Model
             address_data[:user_id] = user.id
             Address.create(address_data)
         else
-            puts "Failed to save address."
+            puts Rainbow("Failed to save address.").bg(:red).bright.underline
             contact.errors.each do |column, error|
-                puts "#{column.capitalize}: #{error.join(', ')}"
+                puts Rainbow("#{column.capitalize}: #{error.join(', ')}").bg(:red).bright.underline
             end
         end
     end
 
     def self.update_address(user)
 
-        puts "Endereços:"
+        puts Rainbow("***Endereços***").bg(:cyan).bright
         user.addresses.each_with_index do |address, index|
             puts "#{index + 1}. #{address.street}, #{address.number}, #{address.city}, #{address.state}, #{address.uf}, #{address.zipcode}"
         end
 
         loop do
-            print "Digite o número do contato que deseja alterar (ou 0 para sair): "
+            print Rainbow("Digite o número do contato que deseja alterar (ou 0 para sair): ").bright
             choice_address = gets.chomp.to_i
             
             break if choice_address == 0
@@ -80,9 +80,9 @@ class Address < Sequel::Model
                 address_data = get_address_data
             
                 address.update(address_data)
-                puts "Endereço atualizado com sucesso!"
+                puts Rainbow("Endereço atualizado com sucesso!").bg(:green).bright
             else
-                puts 'Invalid option. Try again.'
+                puts Rainbow('Invalid option. Try again.').bg(:red).bright.underline
             end
         end
     end
